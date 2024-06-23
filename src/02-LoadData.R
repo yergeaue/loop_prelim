@@ -11,14 +11,19 @@ contig <- read.table(file = here("data", "raw", "merged_contig_abundance.tsv"), 
 
 #annotations
 annot <- read.table(file = here("data", "raw", "annotations.tsv"), quote = "", comment.char = "", header = T,  sep = "\t") #272524 obs of 38 var
+annot.s <- annot[order(annot$gene_id),]
 
 #Normalize abundance tables
 gene.norm <-  data.frame(apply(gene, 1, "/", colSums(gene))) # 6 obs. of 272524 variables
 contig.norm <-  data.frame(apply(contig, 1, "/", colSums(contig))) #6 obs. of 95,725 variables
+gene.norm.s <- gene.norm[,order(colnames(gene.norm))]
 
 #Check sorting
 rownames(map) == row.names(gene.norm) #All TRUE
 rownames(map) == row.names(contig.norm) #All TRUE
+sum(annot.s$gene_id == colnames(gene.norm.s))#272,524
+
+
 
 #Save intermediate
 saveRDS(map, file = here("data","intermediate","map.RDS"))
@@ -27,3 +32,5 @@ saveRDS(gene.norm, file = here("data","intermediate","gene.norm.RDS"))
 saveRDS(contig, file = here("data","intermediate","contig.RDS"))
 saveRDS(contig.norm, file = here("data","intermediate","contig.norm.RDS"))
 saveRDS(annot, file = here("data","intermediate","annot.RDS"))
+saveRDS(annot.s, file = here("data","intermediate","annot.s.RDS"))
+saveRDS(gene.norm.s, file = here("data","intermediate","gene.norm.s.RDS"))
